@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alexis Thomson's Profile</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #6fa4da;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .profile-card {
+            background-color: #ef8080;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .profile-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            color: #0c0d0e;
+            font-size: 1.2rem;
+        }
+
+        .text-muted {
+            color: #060606;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .font-weight-bold {
+            font-weight: bold;
+        }
+
+        .chat-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-card">
+        <img src="https://demos.creative-tim.com/soft-ui-dashboard/assets/img/team-2.jpg" alt="Alexis Thomson" class="profile-image">
+        <span class="h6 font-weight-bold mb-0">Alexis Thomson</span>
+        <h6 class="card-title text-muted text-sm mb-0">UI Designer</h6>
+        <button class="chat-button" onclick="startChat()">Start Chat</button>
+    </div>
+
+    <script>
+        function startChat() {
+            // Add your chat initiation logic here
+            alert("Chat initiated!");
+        }
+    </script>
+</body>
+</html>

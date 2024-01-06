@@ -1,0 +1,111 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Project Form</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0; /* Light grey background */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        form {
+            background-color: #ffffff; /* White form background */
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin: 15px 0 8px;
+            color: #555;
+            text-align: left;
+        }
+
+        input,
+        textarea {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        input[type="date"] {
+            width: calc(100% - 22px);
+        }
+
+        button {
+            background-color: #4caf50; /* Green button */
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        button:hover {
+            background-color: #45a049; /* Darker green on hover */
+        }
+    </style>
+</head>
+
+<body>
+
+    <form id="projectForm" onsubmit="event.preventDefault(); submitForm();">
+        <h2>Create New Project</h2>
+
+        <label for="projectName">Project Name:</label>
+        <input type="text" id="projectName" name="projectName" placeholder="Enter project name" required>
+
+        <label for="projectDescription">Project Description:</label>
+        <textarea id="projectDescription" name="projectDescription" rows="4" placeholder="Enter project description" required></textarea>
+
+        <label for="startDate">Start Date:</label>
+        <input type="date" id="startDate" name="startDate" required>
+
+        <label for="endDate">End Date:</label>
+        <input type="date" id="endDate" name="endDate" required>
+
+        <label for="teamMembers">Team Members (comma-separated):</label>
+        <textarea id="teamMembers" name="teamMembers" rows="3" placeholder="Enter team members, separated by commas" required></textarea>
+
+        <label for="projectDomain">Project Domain:</label>
+        <input type="text" id="projectDomain" name="projectDomain" placeholder="Enter project domain" required>
+
+        <button type="submit">Create Project</button>
+    </form>
+
+    <script>
+        function submitForm() {
+            // Check if the form is valid
+            if (document.getElementById('projectForm').checkValidity()) {
+                // Show a pop-up/modal with a success message
+                alert('Project submitted successfully!');
+                // You can customize this alert with a more sophisticated modal
+            }
+        }
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,291 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Clock and Calendar</title>
+    <link rel="stylesheet" href="timer.css">
+    <center><h3>SCHEDULER</h3></center>
+    <style>
+     
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #add8e6; /* Light Blue background color */
+            color: #000000; /* Black text color */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+            font-size: xx-large; /* Add some padding to the body */
+        }
+
+        .clock-container,
+        .calendar-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .clock-box,
+        .calendar-box {
+            font-size: 1em; /* Reduced font size to half */
+            background-color: #ffffff; /* Light Green color */
+            color: #000000; /* Black text color */
+            padding: 10px; /* Reduced padding */
+            border-radius: 5px; /* Curved edges */
+            margin: 0 5px; /* Reduced margin */
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow: hidden; /* Ensure content stays within the box */
+        }
+
+        .separator,
+        .calendar-separator {
+            font-size: 1em; /* Reduced font size to half */
+            color: #000000; /* Black text color */
+            margin: 0 5px; /* Reduced margin */
+        }
+
+        .label,
+        .calendar-label {
+            font-size: 0.4em; /* Reduced font size to half */
+            color: #000000; /* Black text color */
+        }
+
+        .task-input {
+            font-size: 0.8em;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 5px;
+            border: 1px solid #000000;
+            display: none;
+        }
+
+        .task-section {
+            font-size: 0.8em;
+            margin-top: 10px;
+            color: #000000;
+        }
+
+        .task-list-item {
+            margin-top: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .task-checkbox {
+            margin-right: 5px;
+        }
+
+        .delete-button {
+            background-color: #ff0000; /* Red color for delete button */
+            color: #ffffff; /* White text color for delete button */
+            padding: 5px;
+            margin-left: 5px;
+            cursor: pointer;
+        }
+
+        .completed-task {
+            text-decoration: line-through;
+            color: #808080; /* Gray color for completed tasks */
+        }
+
+        .shake {
+            animation: shake 0.5s infinite alternate;
+        }
+
+        @keyframes shake {
+            0%, 100% {
+                transform: translateX(0);
+            }
+            50% {
+                transform: translateX(2.5px);
+            }
+        }
+
+        /* Calendar-specific styles */
+        .calendar-box {
+            margin-top: 10px; /* Add some space between timer and calendar */
+        }
+
+        .calendar-input {
+            font-size: 1em;
+            padding: 10px;
+            border-radius: 5px;
+            margin-right: 5px;
+            border: 1px solid #000000;
+        }
+
+        .calendar-input::before {
+            content: "\2022"; /* Unicode bullet point character before the input */
+            margin-right: 5px;
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: #ffffff;
+            border: 1px solid #000000;
+            z-index: 999;
+        }
+
+        .popup-content {
+            font-size: 1em;
+            color: #000000;
+        }
+
+        .popup-close {
+            font-size: 1em;
+            color: #ff0000; /* Red color for close button */
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="clock-container">
+        <div class="clock-box" id="hours">
+            <div>00</div>
+            <div class="label">Hours</div>
+        </div>
+        <div class="separator">:</div>
+        <div class="clock-box" id="minutes">
+            <div>00</div>
+            <div class="label">Minutes</div>
+        </div>
+        <div class="separator">:</div>
+        <div class="clock-box shake" id="seconds">
+            <div class="shake">00</div>
+            <div class="label">Seconds</div>
+        </div>
+    </div>
+
+    <div class="calendar-container">
+        <div class="calendar-box">
+            <input type="date" class="calendar-input" id="calendar" min="2024-01-01">
+            <div class="calendar-label">Select a date in 2024</div>
+            <input type="text" class="task-input" id="taskInput" placeholder="Enter your task...">
+            <button onclick="addTask()">Add Task</button>
+            <div class="task-section">
+                <div>Upcoming Tasks:</div>
+                <ul class="task-details" id="upcomingTasks"></ul>
+            </div>
+            <div class="task-section">
+                <div>Completed Tasks:</div>
+                <ul class="task-details" id="completedTasks"></ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="popup" id="popup">
+        <div class="popup-content">
+            <p>Task cannot be assigned to the selected date (past date).</p>
+            <span class="popup-close" onclick="closePopup()">Close</span>
+        </div>
+    </div>
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+            
+            document.getElementById('hours').firstElementChild.textContent = hours;
+            document.getElementById('minutes').firstElementChild.textContent = minutes;
+            document.getElementById('seconds').firstElementChild.textContent = seconds;
+        }
+
+        function showTaskInput() {
+            const taskInput = document.getElementById('taskInput');
+            const upcomingTasks = document.getElementById('upcomingTasks');
+            const completedTasks = document.getElementById('completedTasks');
+            const selectedDate = document.getElementById('calendar').value;
+
+            // Check if selected date is in the past
+            if (new Date(selectedDate) < new Date()) {
+                showPopup();
+                return;
+            }
+
+            taskInput.style.display = 'block';
+            taskInput.focus();
+
+            taskInput.addEventListener('change', function() {
+                const task = taskInput.value;
+
+                if (task) {
+                    const formattedDate = new Date(selectedDate).toLocaleDateString();
+                    const taskItem = document.createElement('li');
+                    taskItem.className = 'task-list-item';
+                    taskItem.innerHTML = `
+                        <span class="task-checkbox"><input type="checkbox" onchange="toggleCompleted(this)"></span>
+                        <span>${formattedDate}: ${task}</span>
+                        <span class="delete-button" onclick="deleteTask(this)">Delete</span>
+                    `;
+
+                    // Add task to upcoming tasks by default
+                    upcomingTasks.appendChild(taskItem);
+
+                    // Clear input and hide it
+                    taskInput.value = '';
+                    taskInput.style.display = 'none';
+                }
+            });
+        }
+
+        function addTask() {
+            showTaskInput();
+        }
+
+        function deleteTask(deleteButton) {
+            const taskItem = deleteButton.closest('.task-list-item');
+            taskItem.remove();
+        }
+
+        function toggleCompleted(checkbox) {
+            const taskItem = checkbox.closest('.task-list-item');
+            const taskText = taskItem.querySelector('span:not(.task-checkbox)');
+
+            if (checkbox.checked) {
+                taskText.classList.add('completed-task');
+                // Move to completed tasks section
+                document.getElementById('completedTasks').appendChild(taskItem);
+            } else {
+                taskText.classList.remove('completed-task');
+                // Move back to upcoming tasks section
+                document.getElementById('upcomingTasks').appendChild(taskItem);
+            }
+        }
+
+        function showPopup() {
+            const popup = document.getElementById('popup');
+            popup.style.display = 'block';
+        }
+
+        function closePopup() {
+            const popup = document.getElementById('popup');
+            popup.style.display = 'none';
+        }
+
+        // Set default value of the calendar input to the current date
+        document.getElementById('calendar').valueAsDate = new Date();
+
+        const calendarInput = document.getElementById('calendar');
+        calendarInput.addEventListener('input', showTaskInput);
+
+        setInterval(updateClock, 1000);
+        updateClock(); // Initial call to display the time immediately
+    </script>
+</body>
+</html>

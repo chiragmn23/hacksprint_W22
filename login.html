@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soft UI Dashboard - Login</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/soft-ui-dashboard@1.0.2/css/soft-ui-dashboard.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="clock-container">
+        <div class="clock-box" id="hours">
+            <div>00</div>
+            <div class="label">Hours</div>
+        </div>
+        <div class="separator">:</div>
+        <div class="clock-box" id="minutes">
+            <div>00</div>
+            <div class="label">Minutes</div>
+        </div>
+        <div class="separator">:</div>
+        <div class="clock-box shake" id="seconds">
+            <div class="shake">00</div>
+            <div class="label">Seconds</div>
+        </div>
+    </div>
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+            
+            document.getElementById('hours').firstElementChild.textContent = hours;
+            document.getElementById('minutes').firstElementChild.textContent = minutes;
+            document.getElementById('seconds').firstElementChild.textContent = seconds;
+        }
+
+        setInterval(updateClock, 1000);
+        updateClock(); // Initial call to display the time immediately
+    </script>
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-4">
+                <div class="card shadow-lg border-0 rounded-lg mt-5">
+                    <div class="card-header"><h3 class="text-center font-weight-light my-4">Login</h3></div>
+                    <div class="card-body">
+                        <form id="login-form">
+                            <div class="form-floating mb-3">
+                                <input class="form-control" id="username" type="text" placeholder="Username" required >
+                                
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input class="form-control" id="password" type="password" placeholder="Password" required>
+                                
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
+                                <button type="button" class="btn btn-primary" onclick="login()" >Login</button>
+                            </div>
+                        </form>
+                        <div id="error-message" class="text-center text-danger mt-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="chat-button" onclick="toggleChat()">
+        <span>&#128172;</span>
+    </div>
+    <div class="chat-window" id="chat-window">
+        
+        <div class="chat-header">Feedback</div>
+        <div class="chat-messages" id="chat-messages"></div>
+        <div class="chat-input">
+            <input type="text" id="chat-input" placeholder="Type your message">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.36.2.min.js"></script>
+    <script src="https://cdn.chatengine.io/cover/ce.js"></script>
+    <script src="login.js"></script>
+    
+</body>
+</html>
