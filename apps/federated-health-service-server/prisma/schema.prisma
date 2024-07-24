@@ -1,0 +1,47 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Hospital {
+  id          String       @id @default(cuid())
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  name        String?
+  location    String?
+  localModels LocalModel[]
+}
+
+model LocalModel {
+  id               String         @id @default(cuid())
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  trainingAccuracy Float?
+  modelUrl         String?
+  hospital         Hospital?      @relation(fields: [hospitalId], references: [id])
+  hospitalId       String?
+  trainingTasks    TrainingTask[]
+}
+
+model TrainingTask {
+  id              String      @id @default(cuid())
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  trainingDetails String?
+  startTime       DateTime?
+  endTime         DateTime?
+  localModel      LocalModel? @relation(fields: [localModelId], references: [id])
+  localModelId    String?
+}
+
+model GlobalModel {
+  id             String   @id @default(cuid())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  modelUrl       String?
+  globalAccuracy Float?
+}
